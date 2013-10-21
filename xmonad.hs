@@ -136,6 +136,10 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
      spawn $ XMonad.terminal conf)
 
   -- Lock the screen using xscreensaver.
+  , ((modMask .|. controlMask, xK_KP_Enter),
+     spawn $ XMonad.terminal conf)
+
+  -- Lock the screen using xscreensaver.
   , ((modMask .|. controlMask, xK_l),
      spawn "xscreensaver-command -lock")
 
