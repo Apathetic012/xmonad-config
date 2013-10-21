@@ -25,14 +25,14 @@ import qualified Data.Map        as M
 -- The preferred terminal program, which is used in a binding below and by
 -- certain contrib modules.
 --
-myTerminal = "/usr/bin/gnome-terminal"
+myTerminal = "/usr/bin/terminator"
 
 
 ------------------------------------------------------------------------
 -- Workspaces
 -- The default number of workspaces (virtual screens) and their names.
 --
-myWorkspaces = ["1:term","2:web","3:code","4:vm","5:media"] ++ map show [6..9]
+myWorkspaces = ["1:code","2:web","3:chat","4:media"] ++ map show [6..9]
 
 
 ------------------------------------------------------------------------
@@ -58,8 +58,8 @@ myManageHook = composeAll
     , className =? "Gimp"           --> doFloat
     , resource  =? "gpicview"       --> doFloat
     , className =? "MPlayer"        --> doFloat
-    , className =? "VirtualBox"     --> doShift "4:vm"
-    , className =? "Xchat"          --> doShift "5:media"
+    , className =? "Xchat"          --> doShift "4:media"
+    , className =? "Sublime_text"   --> doShift "1:code"
     , className =? "stalonetray"    --> doIgnore
     , isFullscreen --> (doF W.focusDown <+> doFullFloat)]
 
@@ -108,6 +108,13 @@ xmobarCurrentWorkspaceColor = "#CEFFAC"
 
 -- Width of the window border in pixels.
 myBorderWidth = 1
+
+numPadKeys =
+  [
+    xK_KP_End, xK_KP_Down, xK_KP_Page_Down
+    , xK_KP_Left, xK_KP_Begin,xK_KP_Right
+    , xK_KP_Home, xK_KP_Up, xK_KP_Page_Up
+  ]
 
 
 ------------------------------------------------------------------------
@@ -267,6 +274,11 @@ myKeys conf@(XConfig {XMonad.modMask = modMask}) = M.fromList $
   -- mod-shift-[1..9], Move client to workspace N
   [((m .|. modMask, k), windows $ f i)
       | (i, k) <- zip (XMonad.workspaces conf) [xK_1 .. xK_9]
+      , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
+  ++
+
+  [((m .|. modMask, k), windows $ f i)
+      | (i, k) <- zip (XMonad.workspaces conf) numPadKeys
       , (f, m) <- [(W.greedyView, 0), (W.shift, shiftMask)]]
   ++
 
